@@ -515,8 +515,9 @@ export default function FeatureTabs() {
           transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
           className="font-display text-[26px] sm:text-[32px] md:text-[40px] lg:text-[48px] font-bold text-[#1A1A1A] text-center leading-[1.15] tracking-[-0.02em] mb-10"
         >
-          The new era of accounting begins with{" "}
-          <span className="text-gradient">Entity</span>
+          Built for the way{" "}
+          <span className="text-gradient">Indian CA firms</span>{" "}
+          actually work
         </motion.h2>
 
         {/* Pill tabs */}

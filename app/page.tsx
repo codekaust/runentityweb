@@ -1,7 +1,6 @@
 import AnnouncementBanner from "@/components/sections/AnnouncementBanner";
 import Navigation from "@/components/sections/Navigation";
 import Hero from "@/components/sections/Hero";
-import DemoVideo from "@/components/sections/DemoVideo";
 import FeatureTabs from "@/components/sections/FeatureTabs";
 import TrustedBy from "@/components/sections/TrustedBy";
 import FinalCTA from "@/components/sections/FinalCTA";
@@ -15,9 +14,8 @@ export default function Home() {
       {/* Navigation */}
       <Navigation />
 
-      {/* --- SECTION GROUP 1: Hero + Demo + Features + Trust --- */}
+      {/* --- SECTION GROUP 1: Hero + Features + Trust --- */}
       <Hero />
-      <DemoVideo />
       <FeatureTabs />
       <TrustedBy variant="top" />
 

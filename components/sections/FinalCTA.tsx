@@ -4,7 +4,6 @@ import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { EntityMark } from "@/components/entity-mark";
-import { useDemoModal } from "@/components/ui/DemoModalProvider";
 
 /* ── Stipple art: AI agent (robotic/geometric figure) working on account books ── */
 function StippleArt() {
@@ -254,7 +253,32 @@ function StippleArt() {
 export default function FinalCTA() {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
-  const { openModal } = useDemoModal();
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus("loading");
+    setErrorMsg("");
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setErrorMsg(data.error || "Something went wrong.");
+        setStatus("error");
+      } else {
+        setStatus("success");
+      }
+    } catch {
+      setErrorMsg("Something went wrong. Try again.");
+      setStatus("error");
+    }
+  }
 
   return (
     <section
@@ -282,7 +306,9 @@ export default function FinalCTA() {
             transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
             className="font-display text-[26px] sm:text-[32px] md:text-[40px] lg:text-[48px] font-bold text-white leading-[1.15] tracking-[-0.02em] mb-4"
           >
-            Run Entity
+            The ugly version ships today.
+            <br />
+            <span className="text-white/50">The final one on 1st May.</span>
           </motion.h2>
 
           {/* Subline */}
@@ -292,22 +318,48 @@ export default function FinalCTA() {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="font-body text-[16px] text-white/45 mb-8 max-w-md"
           >
-            This is what accounting was always meant to be.
+            If you&apos;re a CA firm, a finance lead, or a founder who has ever cried into a Tally screen — drop your email. I&apos;ll personally onboard the first 100.
           </motion.p>
 
-          {/* CTA Button */}
+          {/* Email waitlist */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.25 }}
           >
-            <button
-              onClick={() => openModal("demo")}
-              className="inline-flex items-center gap-3 px-8 py-3.5 border border-white/25 rounded-xl text-white text-[15px] font-body font-medium hover:bg-white hover:text-[#0A0A0A] transition-all duration-300"
-            >
-              Book a demo
-              <ArrowRight className="w-5 h-5" />
-            </button>
+            {status === "success" ? (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-white font-body text-[16px]"
+              >
+                You&apos;re on the list. We&apos;ll reach out personally.
+              </motion.p>
+            ) : (
+              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center justify-center gap-2 max-w-[420px] mx-auto">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  required
+                  disabled={status === "loading"}
+                  className="w-full sm:flex-1 px-4 py-3.5 rounded-xl bg-white/10 border border-white/20 text-[15px] font-body text-white placeholder-white/30 focus:outline-none focus:border-white/50 transition-colors disabled:opacity-50"
+                />
+                <button
+                  type="submit"
+                  disabled={status === "loading"}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-white/25 rounded-xl text-white text-[15px] font-body font-medium hover:bg-white hover:text-[#0A0A0A] transition-all duration-300 disabled:opacity-50 whitespace-nowrap"
+                >
+                  {status === "loading" ? "Joining..." : (
+                    <>Get early access <ArrowRight className="w-4 h-4" /></>
+                  )}
+                </button>
+              </form>
+            )}
+            {status === "error" && (
+              <p className="mt-2 text-[13px] text-red-400 font-body">{errorMsg}</p>
+            )}
           </motion.div>
         </div>
 

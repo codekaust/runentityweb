@@ -23,7 +23,7 @@ export default function AnnouncementBanner() {
               className="inline-flex items-center gap-2 hover:opacity-80 transition-opacity"
             >
               <span className="text-white/90 text-[13px] font-body">
-                Enter the Entity
+                Tally + Zoho integrations from day 1 · Early access open now
               </span>
               <ArrowRight size={12} className="text-white/30" />
             </a>
